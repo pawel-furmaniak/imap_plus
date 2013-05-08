@@ -1,0 +1,3 @@
+* limit extra fieldsets to 10
+* Polish translation
+* lock options are not being saved

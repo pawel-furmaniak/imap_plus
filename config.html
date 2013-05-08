@@ -1,0 +1,105 @@
+<table cellspacing="0" cellpadding="5" border="0">
+<?
+
+// get available roles
+$systemcontext = get_context_instance(CONTEXT_SYSTEM);
+$roles = get_assignable_roles($systemcontext);
+$roles[0] = get_string('noroles', 'role');
+$roles = array_reverse($roles, true);
+
+foreach ( $config->hosts as $key=>$val ) {
+    
+    if ($val == 'extra') {
+        $val = '';
+    }
+    
+    print('<tr valign="top" class="required">
+        <td align="right">'.get_string('auth_imaphost_key', 'auth_imap_plus').' '.($key+1).': </td>
+        <td>
+            <input name="hosts[]" type="text" size="30" value="'.$val.'" />');
+    //TODO: cover this
+    //if (isset($err['host_1'])) {
+    //    echo $OUTPUT->error_text($err['host_1']);
+    //}
+    print('</td>
+        <td>'.get_string('auth_imaphost', 'auth_imap_plus').'</td>
+    </tr>
+    
+    <tr valign="top" class="required">
+        <td align="right">'.get_string('auth_imaproles_key', 'auth_imap_plus').' '.($key+1).': </td>
+        <td>
+    <select name="roles[]">');
+    
+    foreach ( $roles as $role_id=>$role_name ) {
+        $extra = '';
+        if ( array_key_exists( $key, $config->roles ) ) {
+            if ( $role_id == $config->roles[$key] ) {
+                $extra = 'selected';
+            } 
+        }
+        print('<option value="'.$role_id.'" '.$extra.'>'.$role_name.'</option>');
+    }
+    print('</select>');
+            
+    //TODO: cover this
+    //if (isset($err['host_1'])) {
+    //    echo $OUTPUT->error_text($err['host_1']);
+    //}
+    print('</td>
+        <td>'.get_string('auth_imaprole', 'auth_imap_plus').'</td>
+    </tr>');
+
+}
+?>
+<tr valign="top" class="required">
+    <td align="right"><?php print_string('auth_imaptype_key', 'auth_imap_plus') ?>: </td>
+    <td>
+        <?php
+
+        $imaptypes = array('imap', 'imapssl', 'imapcert', 'imaptls');
+        foreach ($imaptypes as $imaptype) {
+            $imapoptions[$imaptype] = $imaptype;
+        }
+        echo html_writer::select($imapoptions, 'type', $config->type, false);
+
+        ?>
+    </td>
+    <td><?php print_string('auth_imaptype', 'auth_imap_plus') ?></td>
+</tr>
+
+<tr valign="top" class="required">
+    <td align="right"><?php print_string('auth_imapport_key', 'auth_imap_plus') ?>: </td>
+    <td>
+        <input name="port" type="text" size="6" value="<?php echo $config->port ?>" />
+        <?php
+
+        if (isset($err['port'])) {
+            echo $OUTPUT->error_text($err['port']);
+        }
+
+        ?>
+    </td>
+    <td><?php print_string('auth_imapport', 'auth_imap_plus') ?></td>
+</tr>
+
+<tr valign="top">
+    <td align="right"><?php print_string('auth_imapchangepasswordurl_key', 'auth_imap_plus') ?>: </td>
+    <td>
+        <input name="changepasswordurl" type="text" value="<?php echo $config->changepasswordurl ?>" />
+        <?php
+
+        if (isset($err['changepasswordurl'])) {
+            echo $OUTPUT->error_text($err['changepasswordurl']);
+        }
+
+        ?>
+    </td>
+    <td><?php print_string('changepasswordhelp', 'auth') ?></td>
+</tr>
+
+<?php
+
+print_auth_lock_options('imap', $user_fields, get_string('auth_fieldlocks_help', 'auth'), false, false);
+
+?>
+</table>
