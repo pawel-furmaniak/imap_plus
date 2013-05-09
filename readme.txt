@@ -4,7 +4,6 @@ Enhanced moodle's built-in imap authentication plugin.
 Features
 ########
 
-    - Authenticates against multiple IMAP servers
     - Assigns system level role based on the authenticating server
 
 Installation
